@@ -1,10 +1,10 @@
----
+<!-- ---
 layout: page
 title: project 4
 description: another without an image
 img:
 importance: 3
-category: fun
+category: Fun
 ---
 
 Every project has a beautiful feature showcase page.
@@ -77,4 +77,4 @@ Here's the code for the last row of images above:
     </div>
 </div>
 ```
-{% endraw %}
+{% endraw %} -->
