@@ -127,7 +127,7 @@ permalink: /blog/:year/:title/
 
 # Pagination
 pagination:
-  enabled: true
+  enabled: True
 
 related_blog_posts:
   enabled: true
@@ -208,6 +208,8 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+  - ML
+  - code
 keep_files:
   - CNAME
   - .nojekyll

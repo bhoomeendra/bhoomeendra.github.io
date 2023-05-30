@@ -6,6 +6,7 @@ description: This blog is a part of interview prepration this contain explanatio
 tags: Interview_prep
 categories: ML
 related_posts: false
+published: false
 ---
 # Linear Regression 
 <!-- #### What is Linear Regression? -->
