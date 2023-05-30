@@ -1,88 +1,128 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://bhooomeendra.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://bhooomeendra.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-05-09T10:51:18+00:00</updated><id>https://bhooomeendra.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle><entry><title type="html">Coding Questions</title><link href="https://bhooomeendra.github.io/blog/2023/Coding-Questions/" rel="alternate" type="text/html" title="Coding Questions" /><published>2023-04-30T00:00:00+00:00</published><updated>2023-04-30T00:00:00+00:00</updated><id>https://bhooomeendra.github.io/blog/2023/Coding-Questions</id><content type="html" xml:base="https://bhooomeendra.github.io/blog/2023/Coding-Questions/"><![CDATA[<h1 id="1backtracking">1.Backtracking</h1>
-<p>To basice idea of backtracking problem is to try all the possible solution and then choose the best one. But this choices can be tricky some times hence when solving a backtracking problem we need to keep in mind the following points:</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://bhooomeendra.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://bhooomeendra.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-05-30T19:11:28+00:00</updated><id>https://bhooomeendra.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">Discourse-Aware Unsupervised Summarization of Long Scientific Documents (Hiporank)</title><link href="https://bhooomeendra.github.io/blog/2023/HipoRank/" rel="alternate" type="text/html" title="Discourse-Aware Unsupervised Summarization of Long Scientific Documents (Hiporank)" /><published>2023-04-29T00:00:00+00:00</published><updated>2023-04-29T00:00:00+00:00</updated><id>https://bhooomeendra.github.io/blog/2023/HipoRank</id><content type="html" xml:base="https://bhooomeendra.github.io/blog/2023/HipoRank/"><![CDATA[<h2 id="papers-objective">Paper’s Objective</h2>
+<p>The paper adapts graph-based ranking model for <strong>extractive summarization</strong> of long scientific documents by exploiting discoures structure i.e., sections in the case of scientific documents.</p>
+
+<h2 id="problem-formulation">Problem formulation</h2>
+<p>A document is represented as a set of nodes. Each node represents a sentence, and the similarity between two sentences is the edge weight between them. Summary generation is formulated as a node selection problem, in which nodes (i.e., sentences) that are semantically similar to other nodes are chosen to be included in the final summary. In other words, they determine node importance by defining a notion of centrality in the graph.</p>
+
+<h2 id="central-idea">Central Idea</h2>
+<ul>
+  <li>
+    <p>A simple unsupervised graph-based ranking model combined with proper sophisticated modeling of discourse information as an inductive bias can achieve unreasonable effectiveness in selecting important sentences from long scientific documents. (LexRank and PacSum are the choices of unsupervised graph-based ranking models.)</p>
+  </li>
+  <li>
+    <p>Important information typically occurs at the start and end of sections.</p>
+  </li>
+  <li>
+    <p>Most sentences across section boundaries are unlikely to interact significantly with each other. To implement this, a hierarchy is introduced in the graph. A section-level representations as graph nodes in addition to sentence nodes  By doing so, we convert
+a flat graph into a hierarchical non-fully-connected graph, which has two advantages:</p>
+    <ul>
+      <li>Reduced computational cost</li>
+      <li>Pruning of distracting weak</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="methodology">Methodology</h2>
+<p>Let us represent a document as a graph \(G=(V,E)\) where \(V\) is the set of vertices that represent sentences or other textual units in the document and \(E\) is the set of edges that represent the similarity between sentences. The directed edge \(e_{ij}\) from node \(v_i\) to node \(v_j\) is typically weighted by \(w_{ij} = f (sim(v_i , v_j))\), where \(sim\) is a measure of similarity between two nodes.</p>
+
+<p>The algorithms select the most salient sentences from \(V\) based on the assumption that sentences that are similar to a greater number of other sentences capture more important content and therefore are more informative.</p>
+
+<p>To create the hierarchy, we allow two levels of connections in our hierarchical graph: intra-sectional connections and inter-sectional connections.</p>
+
+<p><strong>Intra-sectional connections</strong> aim to model the local importance of a sentence within its section. It implements the idea that a sentence that is similar to a greater number of other sentences in the same topic/section should be more important. This is realized in our fully-connected subgraph for an arbitrary section I, where we allow sentence-sentence edges for all sentence nodes within the same section.</p>
+
+<p><strong>Inter-sectional connections</strong> aim to model the global importance of a sentence with respect to
+other topics/sections in the document, as a sentence that is similar to a greater number of other topics is deemed more important.</p>
+
+<div style="text-align: center;">
+<img src="https://d3i71xaburhd42.cloudfront.net/20a3ab365ad179dcb0dc19c5dbcdede772a2bcb8/5-Figure1-1.png" width="700" height="250" class="center" />
+</div>
+<p> </p>
+
+<p>The authores introduce section nodes on top of sentence nodes to form a hierarchical graph. For inter-section connections, we only allow section-sentence edges for modeling the global information.</p>
+
+<p>To calculate the weight of an edge, we first measure similarity between a sentence-sentence pair \(sim(v_j^{I} , v_i^{I} )\) and a section-sentence pair \(sim(v^J , v_i^I )\). While our method is agnostic to the measure of similarity, we use cosine similarity with different vector representations in our experiments, averaging a section’s sentence representations to obtain its own.</p>
+
+<p><strong>While the similarities of two graph nodes are symmetric, one may be more salient than the other when considering their discourse structures.</strong></p>
+
+<p><strong>Asymmetric edge weighting over sentences</strong> is based on the hypothesis that important sentences are near the boundaries (start or end) of a text (Baxendale,1958). We reflect this hypothesis by defining sentence boundary function \(d_b\) over sentences \(v_i^I\)  in section I such that sentences closer to the section’s
+boundaries are more important:</p>
+
+\[d_b(v_i^I ) = min(x_i^I , α(n^I − x_i^I ))\]
+
+<p>where \(n^I\) is the number of sentences in section \(I\) and \(x_i^I\) represents sentence i’s position in the section \(I\). \(α ∈ R+\) is a hyper-parameter that controls the relative importance of the start or end of a section or document.</p>
+
+<p>we define the weight \(w_{ji}^I\) for intra-section edges (incoming edges for i) as:</p>
+
+\[w_{ji}^I= 
+\begin{cases}
+    \lambda_1*sim(v_j^{I} , v_i^{I} ),&amp; \text{if } d_b(v_i^{I}) \geq d_b(v_j^{I})\\
+    \lambda_2*sim(v_j^{I} , v_i^{I} ),&amp; \text{otherwise}
+\end{cases}\]
+
+<p>where \(λ1 &lt; λ2\) such that an edge \(e_{ji}\) incident to i is weighted more if i is closer to the text boundary than j. Edges with a weight below a certain threshold \(\beta\) can be pruned.</p>
+
+<p><strong>Asymmetric edge weighting over sections</strong> similar equations are created for inter-section edges. The weight \(w_i^{JI}\) for an edge from section \(J\) to sentence \(i\) in section \(I\) is defined as:</p>
+
+\[w_i^{JI}= 
+\begin{cases}
+    \lambda_1*sim(v^{J} , v_i^{I} ),&amp; \text{if } d_b(v^{I}) \geq d_b(v^{J})\\
+    \lambda_2*sim(v^{J} , v_i^{I} ),&amp; \text{otherwise}
+\end{cases}\]
+
+<p>The same distance criteria is used for inter-section edges as well by using the position of section in the document instead of the position of sentence in the section.</p>
+
+<p><strong>Importance Calculations</strong>
+We compute the overall importance of sentence \(v_i^I\) as the weighted sum of its inter-section and intra-section centrality scores:</p>
+
+\[c(v_i^I) = μ_1 · c_{inter}(v_i^I) + c_{intra}(v_i^I )\]
+
+\[c_{intra}(v_i^{I}) = \sum_{v_j^I\in I}\frac{w_{ji}^I}{|I|}\]
+
+\[c_{inter}(v_i^{I}) = \sum_{v^J\in D}\frac{w_i^{JI}}{|D|}\]
+
+<p>where \(I\) is the set of sentences neighboring \(v_i^I\) and \(D\) is the set of neighboring sections in the hierarchical document graph; \(μ_1\) is a weighting factor for inter-section centrality.</p>
+
+<p><strong>Summary Generation</strong></p>
+
+<p>Lastly, we generate a summary by greedily extracting sentences with the highest importance scores until a predefined word-limit L is passed. Most graph-based ranking algorithms recompute importance after each sentence is extracted in order to prevent content overlap. However, we find that the asymmetric edge scoring functions naturally prevent redundancy because similar sentences have different boundary positional scores. Our method thus successfully extracts diverse sentences without recomputing importance.</p>
+
+<h2 id="results-and-limitations">Results and Limitations</h2>
+
+<p><strong>Cons</strong></p>
+
 <ol>
-  <li>Visualize the state space tree (What are the choice you have at each step)</li>
-  <li>Identify the base case (When to stop)</li>
-  <li>branch pruning (When to stop exploring a branch)</li>
+  <li>
+    <p>The method is limited to long documents with sections, .i.e, have a discourse structure if there are no section then we have to use some way to replace the sections with some other abstraction or we might have to go back to using the flat graph.</p>
+  </li>
+  <li>
+    <p>Coherence will also be an issue as the method is extractive in nature and will not lead to a coherent flow of sentences.</p>
+  </li>
+  <li>
+    <p>Domain-specific nuances might not captured by the method we might have to use modification to address this issue also it does not allow for any kind of supervision. Hence guiding the algorithm to capture domain-specific nuances would be difficult might require futher modeling.</p>
+  </li>
 </ol>
 
-<p>Points specific to python implementation:</p>
+<p><strong>Pros</strong></p>
+
 <ol>
-  <li>Python passes list/mutable object by reference hence we need to make a copy of the list before passing it to the recursive function this can be done by simply doing array[:] this creates a new copy of the list.</li>
-  <li>If we wish to use list as it is then we have to pop the element which we have added after the recursive call to the function.</li>
+  <li>
+    <p>The method is unsupervised and can be applied to any domain without any need for annotated data.</p>
+  </li>
+  <li>
+    <p>The method is extractive in nature and hence the summary is faithful to the original text and factual correctness of the intact.</p>
+  </li>
+  <li>
+    <p>The method is competitive with the state-of-the-art abstractive summarization methods as on 2023 on arxiv Dataset and would be a strong baseline for any long summarization task with discoure structre.</p>
+  </li>
 </ol>
 
-<h2 id="problems">Problems</h2>
-
-<h3 id="1word-search">1.<a href="https://leetcode.com/problems/word-search/">Word Search</a></h3>
-<p>Given an m x n grid of characters board and a string word, return true if word exists in the grid.
-<br /><br /><strong>Learning</strong>: 
-The idea is to use backtracking which we will start from each cell and when we visit a cell we mark with ‘.’ and pass the new board to the recursive function. When we get back from the recursive call we unmark the cell and move to the next cell. We can prune(return) the branch if the cell we are visiting is not equal to the character we are looking for.</p>
-
-<h3 id="2letter-case-permutation">2.<a href="https://leetcode.com/problems/letter-case-permutation/">Letter Case Permutation</a></h3>
-
-<p>Given a string s, we can transform every letter individually to be lowercase or uppercase to create all possible strings.
-Return a list of all possible strings we could create.
-<br /><br /><strong>Learning</strong>:
-We will use backtracking as the string is alpha numerice when the string is a letter we have 2 choice either to keep it as a lower case or to upper case but if it is a number we can just keep it as it is(No branching). Basically it is conditional branching. Also we have a function swapcase() which can be used to swap the case of the letter.<a href="https://leetcode.com/problems/letter-case-permutation/solutions/379928/python-clear-solution/?orderBy=most_votes&amp;languageTags=python">solution</a></p>
-
-<h3 id="3subsets">3.<a href="https://leetcode.com/problems/subsets/">Subsets</a></h3>
-
-<p>Given an integer array nums of unique elements, return all possible subsets (the power set).
-The solution set must not contain duplicate subsets. Return the solution in any order.
-<br /><br /><strong>Learning</strong>:
-The idea is to use backtracking and at each step we have 2 choice either to include the element or not. In both the cases we will remove the number for the list and pass the new list to the recursive function.</p>
-
-<h3 id="4subsets-ii">4.<a href="https://leetcode.com/problems/subsets-ii/">Subsets II</a></h3>
-
-<p>Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
-The solution set must not contain duplicate subsets. Return the solution in any order.
-<br /><br /><strong>Learning</strong>:
-The idea is to use backtracking and at each step we have 2 choice either to include the element or not. But the difference here is that we also have to decide on number of times we want to include the element. So effectully we have k choice which is the number of times we want to include the element this will also include zero time or not to keep the element and we write such recurssion in loop. <a href="https://leetcode.com/problems/subsets-ii/solutions/3464268/backtracking-in-loop/?orderBy=most_votes">solution</a> This solution prevents us from duplicates because for each element we are only branching ones with a branching factor of k. If we use the stratergy of Subsets I then we will have duplicates because we will be branching for single element multiple times.</p>
-
-<h3 id="5permutations">5.<a href="https://leetcode.com/problems/permutations/">Permutations</a></h3>
-
-<p>Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
-<br /><br /><strong>Learning</strong>:
-The idea is to use backtracking and at each first step we have n choice which is the number of elements in the list. We will remove the element from the list and pass the new list to the recursive function. We will also add the element back to the list after the recursive call.</p>
-
-<h3 id="6permutations-ii">6.<a href="https://leetcode.com/problems/permutations-ii/">Permutations II</a></h3>
-
-<p>Given a collection of numbers, nums, that might contain duplicates, return all possible unique permutations in any order.
-<br /><br /><strong>Learning</strong>:
-The idea is to use backtracking and at each step we have m choice which is no. of unique numbers avaiable in that recursive step. we have to maintain a dictionary to keep track of the number of times we have used a number as it should not exess its count in the input array. <a href="https://leetcode.com/problems/permutations-ii/submissions/941544514/">solution</a></p>
-
-<h3 id="7combinations">7.<a href="https://leetcode.com/problems/combinations/">Combinations</a></h3>
-
-<p>Given two integers n and k, return all possible combinations of k numbers out of the range [1, n].
-You may return the answer in any order.
-<br /><br /><strong>Learning</strong>:
-At each step we have n choice which is the number of elements no used till now. We will remove the element from the list and pass the new list to the recursive function. The point to remender is that the list will get smaller and smaller every time we call the recursive function. In my solution i have not used a list but the range function so i have to pass st ever time. <a href="https://leetcode.com/problems/combinations/submissions/941550426/">solution</a></p>
-
-<h3 id="8combination-sum">8.<a href="https://leetcode.com/problems/combination-sum/">Combination Sum</a></h3>
-
-<p>Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
-The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.
-<br /><br /><strong>Learning</strong>::
-At each step we have the choice to use a number from 0 to infinity times but at max we will only use it still its sum is equal to target or less than target. So let say we have array [2,4,5,9] and the target is 18 so we have choices for 2 as [[2] ,[2,2],[2,2,2],…] this is what we will brach for each element and remove that elemnt from the array and pass a temp array with each case and this will be done recursively till the sum is target or greater than targert. If it is equal to target we will add the temp array to the result. <a href="https://leetcode.com/problems/combination-sum/submissions/941567764/">solution</a></p>
-
-<h3 id="9combination-sum-ii">9.<a href="https://leetcode.com/problems/combination-sum-ii/">Combination Sum II</a></h3>
-
-<p>Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target. Each number in candidates may only be used once in the combination.
-Note: The solution set must not contain duplicate combinations.
-<br /><br /><strong>Learning</strong>:
-Here we do not have infinite choice for each element we only have choice equal to the number of times the element is present in the array. So we will have to maintain a dictionary to keep track of the number of times we have used a number as it should not exess its count in the input array. <a href="https://leetcode.com/problems/combination-sum-ii/submissions/941727613/">solution</a></p>
-
-<h3 id="10palindrome-partitioning">10.<a href="https://leetcode.com/problems/palindrome-partitioning/">Palindrome Partitioning</a></h3>
-
-<p>Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.
-<br /><br /><strong>Learning</strong>:
-Partition means division of a string into substrings such that combining all the substring will give the original string. Out of those we have to give the partition in which all the substring are palindroms. So at each step we have the choise to use first i element of the string if it form a palindrom then we keep it in the temp array and pass the remaning string to the recursive function. If not then we continue till we find a palindrom. <a href="https://leetcode.com/problems/palindrome-partitioning/submissions/941994464/">solution</a></p>
-
-<h3 id="11combination-sum-iii">11.<a href="https://leetcode.com/problems/combination-sum-iii/">Combination Sum III</a></h3>
-<h3 id="12generate-parentheses">12.<a href="https://leetcode.com/problems/generate-parentheses/">Generate Parentheses</a></h3>
-<h3 id="13letter-combinations-of-a-phone-number">13.<a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/">Letter Combinations of a Phone Number</a></h3>]]></content><author><name></name></author><category term="Coding" /><category term="Interview_prep" /><summary type="html"><![CDATA[This blog is a part of interview prepration this contain explanation of coding question and concepts related to it.]]></summary></entry><entry><title type="html">On Parenting</title><link href="https://bhooomeendra.github.io/blog/2023/parenting/" rel="alternate" type="text/html" title="On Parenting" /><published>2023-04-27T00:00:00+00:00</published><updated>2023-04-27T00:00:00+00:00</updated><id>https://bhooomeendra.github.io/blog/2023/parenting</id><content type="html" xml:base="https://bhooomeendra.github.io/blog/2023/parenting/"><![CDATA[<h2 id="-the-secret-to-raising-smart-kids-"><a href="https://www.scientificamerican.com/article/the-secret-to-raising-smart-kids/"> The Secret to Raising Smart Kids </a></h2>
+<h2 id="implication">Implication</h2>
+<ol>
+  <li>Extractive summarization faithfully preserves the original text hence ensuring the factual correctness of a summary to some extend. (Which is good for critical applications like medical, legal, etc.)</li>
+  <li>As the method is unsupervised, it can be applied to any domain without any need for annotated data.</li>
+</ol>]]></content><author><name></name></author><category term="Research" /><category term="Paper_Summary" /><category term="NLP" /><category term="Summarization" /><category term="Unsupervised" /><category term="Graph" /><summary type="html"><![CDATA[Paper Summary]]></summary></entry><entry><title type="html">On Parenting</title><link href="https://bhooomeendra.github.io/blog/2023/parenting/" rel="alternate" type="text/html" title="On Parenting" /><published>2023-04-27T00:00:00+00:00</published><updated>2023-04-27T00:00:00+00:00</updated><id>https://bhooomeendra.github.io/blog/2023/parenting</id><content type="html" xml:base="https://bhooomeendra.github.io/blog/2023/parenting/"><![CDATA[<h2 id="-the-secret-to-raising-smart-kids-"><a href="https://www.scientificamerican.com/article/the-secret-to-raising-smart-kids/"> The Secret to Raising Smart Kids </a></h2>
 
 <p>A brilliant student, Jonathan sailed through grade school. He completed his assignments easily and routinely earned As. Jonathan puzzled over why some of his classmates struggled, and his parents told him he had a special gift. In the seventh grade, however, Jonathan suddenly lost interest in school, refusing to do homework or study for tests. As a consequence, his grades plummeted. His parents tried to boost their son’s confidence by assuring him that he was very smart. But their attempts failed to motivate Jonathan.</p>
 
@@ -107,72 +147,4 @@ Partition means division of a string into substrings such that combining all the
 <p>The mastery-oriented children, on the other hand, think intelligence is malleable and can be developed through education and hard work. They want to learn above all else. After all, if you believe that you can expand your intellectual skills, you want to do just that. Because slipups stem from a lack of effort, not ability, they can be remedied by more effort. Challenges are energizing rather than intimidating; they offer opportunities to learn.</p>
 
 <h4 id="effect-on-relationships">Effect on Relationships</h4>
-<p>Ones ability understand that people can change overtime and not labeling people in a certian way helps in build healty relationships because in such sitution when a problem surfaces it is disscused as their is a mutual understand that a problem can be worked out.</p>]]></content><author><name></name></author><category term="Advice" /><category term="Parenting" /><summary type="html"><![CDATA[This blog includes all the parenting advice which will be helpful in rasing better humans.]]></summary></entry><entry><title type="html">Linear and Logistic Regression</title><link href="https://bhooomeendra.github.io/blog/2023/liner-regression/" rel="alternate" type="text/html" title="Linear and Logistic Regression" /><published>2023-04-17T15:12:00+00:00</published><updated>2023-04-17T15:12:00+00:00</updated><id>https://bhooomeendra.github.io/blog/2023/liner-regression</id><content type="html" xml:base="https://bhooomeendra.github.io/blog/2023/liner-regression/"><![CDATA[<h1 id="linear-regression">Linear Regression</h1>
-<!-- #### What is Linear Regression? -->
-<p>The linear regression establishes a relationship between the dependent variable (y) and one or more independent variables (x) using a best-fit straight line. This means relationship between the dependent and independent variables is linear in nature.</p>
-<h4 id="checks-to-apply-before-applying-linear-regression">Checks to apply before applying Linear Regression</h4>
-<ol>
-  <li><strong>Linearity:</strong> Linear relationship between dependent and independent variables that can be done using person correlation coefficient not the spearman correlation coefficient.</li>
-  <li><strong>Normality:</strong> The residuals are normally distributed. This means that the residuals follow a bell-shaped curve, with most of the values clustered around the mean. The normality assumption is necessary because it allows us to use the standard techniques of statistical inference, such as hypothesis testing and confidence intervals. Violations of normality can lead to biased and inefficient estimates, and incorrect conclusions about the statistical significance of the independent variables.</li>
-  <li><strong>Homoscedasticity:</strong> The distribution of residual should be same for all the values of independent variable because if the errors are dependent on the value of independent variable then the model is uncertain as some inputs and is certian at some inputs. This does not provide us a concrete prediction hence the model is not very reiable.</li>
-  <li><strong>No multicollinearity:</strong> There is no high correlation between the independent variables. This means that the independent variables are not too closely related to each other.  If there is high correlation between the independent variables, it can be difficult to separate out their individual effects on the dependent variable, leading to unstable estimates of the regression coefficients.</li>
-</ol>
-
-<h4 id="how-to-deal-with-multicollinearity">How to deal with multicollinearity?</h4>
-<ol>
-  <li><strong>Remove one of the correlated variables:</strong> The simplest way to deal with multicollinearity is to remove one of the highly correlated variables from the regression model. The downside of this approach is that it reduces the degrees of freedom of the model, which can weaken the statistical power of your analysis.</li>
-  <li><strong>Combine the correlated variables:</strong> Another way to deal with multicollinearity is to combine the correlated variables together to form a single predictor. For example, if you had two highly correlated variables, you could combine them together to form a single predictor by taking their average.</li>
-  <li><strong>Use principal components:</strong> Principal components analysis (PCA) is a dimension reduction technique that can be used to reduce a large set of variables to a small set that still contains most of the information in the large set. This technique is useful when you have a large number of correlated predictors, and you want to summarize them with a smaller set of representative variables.</li>
-  <li><strong>Use regularization methods:</strong> Regularization methods, such as ridge (L2 regularization) regression and lasso regression( L1 Regularization), are powerful techniques that are designed to deal with multicollinearity by constraining the size of the regression coefficients. These methods work well when you have a large number of correlated predictors.</li>
-  <li><strong>Do nothing:</strong> If your goal is to make predictions, and not to understand the role of each individual variable, then multicollinearity might not be a problem. Multicollinearity only affects the interpretation of your model if you care about the specific role of each variable. However, multicollinearity does affect the precision of the estimated regression coefficients, which can cause your predictions to be less reliable.</li>
-  <li><strong>Use Partial Least Squares Regression:</strong> Partial least squares regression (PLS regression) is a regression method that is an alternative to ordinary least squares (OLS) regression. PLS regression is useful when you have a large number of correlated predictors, and you want to use them to predict an outcome, but you also want to reduce the number of predictors in your model. PLS regression is similar to principal components regression, but the key difference between the two methods is that PLS regression uses the response variable in the dimension reduction step, while principal components regression does not.</li>
-</ol>
-
-<h4 id="what-is-the-difference-between-l1-and-l2-regularization">What is the difference between L1 and L2 regularization?</h4>
-<p>L2 regularization is also known as ridge regression. L1 also known as Lasso. The key difference between them is when we take derivative of the loss function for both, In L2 we see the update or change would be 2*coeff but in L1 it would be either 1 or -1. This is the reason why L1 regularization is used for feature selection and drives some of the coefficients to zero.</p>
-
-<h4 id="what-are-the-ways-to-solve-the-linear-regression">What are the ways to solve the Linear Regression?</h4>
-<ol>
-  <li><strong>Gradient Descent:</strong> Gradient descent is an iterative optimization algorithm that can be used to solve linear regression. It works by finding the minimum of a cost function, which is typically the sum of the squared residuals.</li>
-  <li><strong>Matrix Inversion:</strong> We use the matrix inversion to solve for the coefficients. For this to work, the matrix should be invertible. From here, we get the condition of multicollinearity that the determinant of the matrix should not be zero for the existence of the inverse. Visit <a href="https://en.wikipedia.org/wiki/Ordinary_least_squares">here</a></li>
-</ol>
-
-<h1 id="logistic-regression">Logistic Regression</h1>
-<!-- #### What is Logistic Regression? -->
-<p>Logistic regression is linear regression over the log odds or logit of the probability of input belonging to a class. The model choice in logistic regression is the logits of the probability are linearly dependent on the independent variable. But the problem we solve with this is the <strong>classification problem</strong>. The output of the model is the probability of the input belonging to a class.
-\(logit(p) = log(\frac{p}{p+1})\)</p>
-
-<p>The model is as follows:</p>
-
-\[logit(p) = w^Tx + b\]
-
-\[p = \frac{1}{1+e^{-(w^Tx+b)}}\]
-
-\[p = \sigma(w^Tx+b)\]
-
-<p>What sigmoid does is that it constrains the output between 0 and 1. This is one of the definitions of logistic regression. We can have a geometric explanation as well. We start with a classification boundary which is \(w^Tx +b\). We want a w such that \(\forall i \; y_i(w^Tx_i+b)&gt;=0\) this means that the predicted class and the actual class should be as for the term to be positive but using this as the objective function as some limitation. The problem is that when an outlier comes, the loss value will be very high, and the model will try to fit the outlier. To solve the problem sigmoid function is used as it constrains the values between 0 and 1.</p>
-
-<h4 id="formulation-of-the-loss-function">Formulation of the loss function</h4>
-<p>The purpose of the loss function is to maximize the probability of the correct class. Logistic regression is a binary classification problem; hence we have two classes, 0 and 1. Higher probability is associated with class 1, and low probability is associated with class 0. The objective function is as follows:</p>
-
-\[L = \prod_{i=1}^n p_i^{y_i}(1-p_i)^{1-y_i} \; where \; p = \sigma(w^Tx+b)\]
-
-\[L = \prod_{i=1}^n \sigma(w^Tx_i+b)^{y_i}(1-\sigma(w^Tx_i+b))^{1-y_i}\]
-
-<p>As all the values are always positive, taking log will not affect the optimization problem. Also will help with numerical stability as the probability values are very small and the product will be even smaller. Hence the loss function is as follows:</p>
-
-\[L = \sum_{i=1}^n y_i log(\sigma(w^Tx_i+b)) + (1-y_i)log(1-\sigma(w^Tx_i+b))\]
-
-\[w^* = argmax_w L(w)\]
-
-<p>But still, we have a problem which is that if when w tends to infinity, the we would have the maximum value of the objective function, which is not what we want. Hence we add a regularization term to the objective function. The objective function is as follows:</p>
-
-\[L = - \sum_{i=1}^n y_i log(\sigma(w^Tx_i+b)) + (1-y_i)log(1-\sigma(w^Tx_i+b)) + \lambda ww^T\]
-
-<!-- This theme supports rendering beautiful math in inline and display modes using [MathJax 3](https://www.mathjax.org/) engine. You just need to surround your math expression with `$$`, like `$$ E = mc^2 $$`. If you leave it inside a paragraph, it will produce an inline expression, just like $$ E = mc^2 $$. -->
-
-<!-- To use display mode, again surround your expression with `$$` and place it as a separate paragraph. Here is an example: -->
-
-<!-- $$\sum_{k=1}^\infty |\langle x, e_k \rangle|^2 \leq \|x\|^2$$ -->
-
-<h1 id="interview-questions">Interview Questions</h1>]]></content><author><name></name></author><category term="ML" /><category term="Interview_prep" /><summary type="html"><![CDATA[This blog is a part of interview prepration this contain explanation and some good interview question on the topic]]></summary></entry></feed>
+<p>Ones ability understand that people can change overtime and not labeling people in a certian way helps in build healty relationships because in such sitution when a problem surfaces it is disscused as their is a mutual understand that a problem can be worked out.</p>]]></content><author><name></name></author><category term="Advice" /><category term="Parenting" /><summary type="html"><![CDATA[This blog includes all the parenting advice which will be helpful in rasing better humans.]]></summary></entry></feed>
