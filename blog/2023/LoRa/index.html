@@ -10,10 +10,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Research | Bhoomeendra Singh Sisodiya</title>
+    <title>(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS | Bhoomeendra Singh Sisodiya</title>
     <meta name="author" content="Bhoomeendra Singh Sisodiya">
-    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-">
+    <meta name="description" content="Paper Summary">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
 
 
@@ -34,7 +33,7 @@
     <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="https://bhooomeendra.github.io/blog/category/research/">
+    <link rel="canonical" href="https://bhooomeendra.github.io/blog/2023/LoRa/">
     
     <!-- Dark Mode -->
     
@@ -111,35 +110,50 @@
 
     <!-- Content -->
     <div class="container mt-5">
-      <div class="post">
+      <!-- _layouts/post.html -->
+
+<div class="post">
 
   <header class="post-header">
-    <h1 class="post-title"> <i class="fas fa-tag fa-sm"></i> Research </h1>
-    <p class="post-description"> an archive of posts in this category </p>
+    <h1 class="post-title">(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS</h1>
+    <p class="post-meta">April 29, 2023</p>
+    <p class="post-tags">
+      <a href="/blog/2023"> <i class="fas fa-calendar fa-sm"></i> 2023 </a>
+        ·  
+        <a href="/blog/tag/paper-summary">
+          <i class="fas fa-hashtag fa-sm"></i> Paper_Summary</a>  
+          <a href="/blog/tag/nlp">
+          <i class="fas fa-hashtag fa-sm"></i> NLP</a>  
+          <a href="/blog/tag/summarization">
+          <i class="fas fa-hashtag fa-sm"></i> Summarization</a>  
+          <a href="/blog/tag/fine-tuning">
+          <i class="fas fa-hashtag fa-sm"></i> Fine_Tuning</a>  
+          
+        ·  
+        <a href="/blog/category/research">
+          <i class="fas fa-tag fa-sm"></i> Research</a>  
+          
+
+    </p>
   </header>
 
-  <article>
-    <div class="table-responsive">
-      <table class="table table-sm table-borderless">
-        
-        <tr>
-          <th scope="row">Apr 29, 2023</th>
-          <td>
-              <a class="post-link" href="/blog/2023/LoRa/">(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS</a>
-          </td>
-        </tr>
-      
-        <tr>
-          <th scope="row">Apr 29, 2023</th>
-          <td>
-              <a class="post-link" href="/blog/2023/HipoRank/">Discourse-Aware Unsupervised Summarization of Long Scientific Documents (Hiporank)</a>
-          </td>
-        </tr>
-      
-      </table>
-    </div>
-  </article>
+  <article class="post-content">
+    <h2 id="papers-objective">Paper’s Objective</h2>
+<p>LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks. Despite having fewer trainable parameters, a higher training throughput, and, unlike adapters, no additional inference latency.</p>
 
+<h2 id="central-idea">Central Idea</h2>
+<p>The weights of the pre-trained model are frozen for example in the self-attention layer of the encoder we have matrix \(W_q\) which is of size \(d \times k\), The hypothesis that the authors have is that instead of adjusting the weights of \(W\) we keep it fixed and learn a \(\Delta W\) which can be further decomposed into \(A\) and \(B\) such that \(\Delta W = A \times B\) where \(A\) is of size \(d \times r\) and \(B\) is of size \(r \times k\) where \(r\) is the rank of the matrix \(\Delta W\). The hypothesis here is that the gradient update matrixes are rank deficient and can be decomposed into low rank matrices. Empirically, the authors show that the very low values like \(r=1\) or \(2\) also works.</p>
+
+<div style="text-align: center;">
+<img src="https://miro.medium.com/v2/resize:fit:598/format:webp/1*BCs63SXaAu3NKqUaTLTH2g.png" width="250" height="250" class="center">
+</div>
+<p> </p>
+
+<p>Matrix A is initialized with gaussian random values and matrix B is initialized with the zeros so intially \(\Delta W\) is zero and the model is the same as the pre-trained model. We then scale \(\Delta W x\) by where \(\alpha\) is a constant in \(r\). When optimizing with Adam, tuning \(\alpha\) is roughly the same as tuning the learning rate if we scale the initialization appropriately. As a result, we simply set \(\alpha\) to the first \(r\)  we try and do not tune it.</p>
+
+<p>When deployed in production, we can explicitly compute and store \(W = W_0 + BA\) and perform inference as usual. Note that both \(W_0\) and \(BA\) are in \mathbb{R}^{d \times k}. When we need to switch to another downstream task, we can recover \(W_0\) by subtracting \(BA\) and then adding a different \(B_0A_0\) , a quick operation with very little memory overhead.</p>
+
+  </article>
 </div>
 
     </div>
