@@ -1,80 +1,62 @@
-<!-- ---
+---
 layout: page
-title: project 2
-description: a project with a background image
-img: assets/img/3.jpg
+title: RecSys Challenge
+description: Deep funnel optimization for app installations focusing on user privacy. 
+img: assets/img/recsys.png
 importance: 2
 category: Work
 ---
+In this challenge, we are provided a real-world ad dataset from the Sharechat and Moj apps to act as a benchmark for research into deep funnel optimization with a focus on user privacy. As part of the challenge, ShareChat released anonymized dataset corresponds to roughly 10M random users who visited the ShareChat + Moj app over three months.(We do not have the name of the feartures) we are directly given the preprocessed data.
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+## Dataset
+We are provided with the following data:
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+|Feature | Description|
+|----------|---------------|
+|`Row ID`| f_0|
+|`Date`| f_1|
+|`Categorical Features`| f_2 ... f_32|
+|`Binary Features`| f_33 ... f_41|
+|`Numerical Features`| f_42 ... f_79|
+|`Is_click`| [Binary] Did the user clicked on the ad|
+|`Is Install`| [Binary] Did the user install the app |
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+As the data is anonymized, we do not have the name of the features. The data is preprocessed and we are directly given the preprocessed data. Basic Discription of data is given below:
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+|`Total Rows`| 3485852|
+|`Only Installs`| 358645 ~ 10%| 
+|`Only Clicks`| 518357 ~ 15%|
+|`Both Installed and Clicked`| 247957 ~ 7%| 
+|`Unique Dates`| 22|
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, *bled* for your project, and then... you reveal its glory in the next row of images.
+## Data Exploration
 
+We did some exporation regarding the range of the feautures and no. of classes in categorical features. Along with this we also explored the correlation between features and the target variable. We also explored the class imbalance in the dataset.
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
+## Data Preprocessing
 
+All the data is given in terms of number so intialize steps of standardization and encoding (One hot or Label encoding) is not required. We just have to check for missing values and remove them. We have to check for outliers and remove them. We have to check for correlation between features and remove them. We have to check for class imbalance and use techniques like SMOTE to balance the classes.
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
+#### Imputation
 
-{% raw %}
-```html
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-```
-{% endraw %} -->
+For categorical features we tried mode imputation , Knn based imputation and probabilistic imputation. For numerical features we tried mean imputation. The missing values can also be given a seperate category.
+
+## Models
+We tried a lot of models like Logistic Regression, Random Forest, XGBoost, LightGBM, CatBoost, Naive Bayse, etc. We also tried stacking of models. We also tried different techniques like Grid Search, Random Search, Bayesian Optimization, etc. to tune the hyperparameters of the models.
+
+## Results
+
+|          **Model**         | **Val Loss** | **Test Loss** |**Description**|
+|:--------------------------:|--------------|---------------|:--------------:|
+|`xgb_all_feat`| 5.968 | 6.373| Hyper parameter turing with optuna|
+|`f1_xgb_catb_best`|Nan| 6.375|Combined XGB and Catboost with f1 formula|
+|`xgb_all_feat_xgb_chain`| 5.99| 6.385|Xgb on top of another Xgb model|
+|`catboost_all_feat`| 5.739  | 6.461 |Catboost model with all the feature with optuna|
+|`xgb_stacked_kfold_logistic` | Nan| 6.611|XGB Stacked kflod Logistic Regression|
+|`xgb_calibrated_logistic`  |Nan| 6.613|Calibrated XGB with logistic regression|
+|`xgb_stack_all_cat_num_xgb` |6.026| 6.643|Stack all the above row 1,2 and 3 optuna with xgb|
+|`xgb_num_cat_all_avg`|Nan| 6.690|Simple average of all the xgb of row 1|
+|`xgb_cat_feat`| 6.248  | 6.927| Hyper parameter turing with optuna while using only Categorical Features|
+|`xgb_float_all_feat`| 5.79| 7.254|Converted all the categorical values to probablites|
+|`xgb_num_feat`| 6.245  | 7.401|Hyper parameter turing with optuna while using only Numerical Features|
+|`xgb_stack_all_cat_num`| 7.685   | 9.910|Stack all the above row 1,2 and 3 optuna with logistice regression model|
