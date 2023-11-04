@@ -10,10 +10,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Summarization | Bhoomeendra Singh Sisodiya</title>
+    <title>RecSys Challenge | Bhoomeendra Singh Sisodiya</title>
     <meta name="author" content="Bhoomeendra Singh Sisodiya">
-    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-">
+    <meta name="description" content="Deep funnel optimization for app installations focusing on user privacy.">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
 
 
@@ -34,7 +33,7 @@
     <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="https://bhooomeendra.github.io/blog/tag/summarization/">
+    <link rel="canonical" href="https://bhooomeendra.github.io/projects/2_project/">
     
     <!-- Dark Mode -->
     
@@ -73,8 +72,8 @@
               </li>
               
               <!-- Blog -->
-              <li class="nav-item active">
-                <a class="nav-link" href="/blog/">Blog<span class="sr-only">(current)</span></a>
+              <li class="nav-item ">
+                <a class="nav-link" href="/blog/">Blog</a>
               </li>
 
               <!-- Other pages -->
@@ -114,36 +113,191 @@
 
     <!-- Content -->
     <div class="container mt-5">
-      <div class="post">
+      <!-- page.html -->
+        <div class="post">
 
-  <header class="post-header">
-    <h1 class="post-title"> <i class="fas fa-hashtag fa-sm"></i> Summarization </h1>
-    <p class="post-description"> an archive of posts with this tag </p>
-  </header>
+          <header class="post-header">
+            <h1 class="post-title">RecSys Challenge</h1>
+            <p class="post-description">Deep funnel optimization for app installations focusing on user privacy.</p>
+          </header>
 
-  <article>
-    <div class="table-responsive">
-      <table class="table table-sm table-borderless">
-        
-        <tr>
-          <th scope="row">Apr 29, 2023</th>
-          <td>
-              <a class="post-link" href="/blog/2023/LoRa/">(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS</a>
-          </td>
-        </tr>
-      
-        <tr>
-          <th scope="row">Apr 29, 2023</th>
-          <td>
-              <a class="post-link" href="/blog/2023/HipoRank/">Discourse-Aware Unsupervised Summarization of Long Scientific Documents (Hiporank)</a>
-          </td>
-        </tr>
-      
-      </table>
-    </div>
-  </article>
+          <article>
+            <p>In this challenge, we are provided a real-world ad dataset from the Sharechat and Moj apps to act as a benchmark for research into deep funnel optimization with a focus on user privacy. As part of the challenge, ShareChat released anonymized dataset corresponds to roughly 10M random users who visited the ShareChat + Moj app over three months.(We do not have the name of the feartures) we are directly given the preprocessed data.</p>
 
-</div>
+<h2 id="dataset">Dataset</h2>
+<p>We are provided with the following data:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Row ID</code></td>
+      <td>f_0</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Date</code></td>
+      <td>f_1</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Categorical Features</code></td>
+      <td>f_2 … f_32</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Binary Features</code></td>
+      <td>f_33 … f_41</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Numerical Features</code></td>
+      <td>f_42 … f_79</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Is_click</code></td>
+      <td>[Binary] Did the user clicked on the ad</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Is Install</code></td>
+      <td>[Binary] Did the user install the app</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>As the data is anonymized, we do not have the name of the features. The data is preprocessed and we are directly given the preprocessed data. Basic Discription of data is given below:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Total Rows</code></td>
+      <td>3485852</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Only Installs</code></td>
+      <td>358645 ~ 10%</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Only Clicks</code></td>
+      <td>518357 ~ 15%</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Both Installed and Clicked</code></td>
+      <td>247957 ~ 7%</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Unique Dates</code></td>
+      <td>22</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="data-exploration">Data Exploration</h2>
+
+<p>We did some exporation regarding the range of the feautures and no. of classes in categorical features. Along with this we also explored the correlation between features and the target variable. We also explored the class imbalance in the dataset.</p>
+
+<h2 id="data-preprocessing">Data Preprocessing</h2>
+
+<p>All the data is given in terms of number so intialize steps of standardization and encoding (One hot or Label encoding) is not required. We just have to check for missing values and remove them. We have to check for outliers and remove them. We have to check for correlation between features and remove them. We have to check for class imbalance and use techniques like SMOTE to balance the classes.</p>
+
+<h4 id="imputation">Imputation</h4>
+
+<p>For categorical features we tried mode imputation , Knn based imputation and probabilistic imputation. For numerical features we tried mean imputation. The missing values can also be given a seperate category.</p>
+
+<h2 id="models">Models</h2>
+<p>We tried a lot of models like Logistic Regression, Random Forest, XGBoost, LightGBM, CatBoost, Naive Bayse, etc. We also tried stacking of models. We also tried different techniques like Grid Search, Random Search, Bayesian Optimization, etc. to tune the hyperparameters of the models.</p>
+
+<h2 id="results">Results</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><strong>Model</strong></th>
+      <th><strong>Val Loss</strong></th>
+      <th><strong>Test Loss</strong></th>
+      <th style="text-align: center"><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_all_feat</code></td>
+      <td>5.968</td>
+      <td>6.373</td>
+      <td style="text-align: center">Hyper parameter turing with optuna</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">f1_xgb_catb_best</code></td>
+      <td>Nan</td>
+      <td>6.375</td>
+      <td style="text-align: center">Combined XGB and Catboost with f1 formula</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_all_feat_xgb_chain</code></td>
+      <td>5.99</td>
+      <td>6.385</td>
+      <td style="text-align: center">Xgb on top of another Xgb model</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">catboost_all_feat</code></td>
+      <td>5.739</td>
+      <td>6.461</td>
+      <td style="text-align: center">Catboost model with all the feature with optuna</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_stacked_kfold_logistic</code></td>
+      <td>Nan</td>
+      <td>6.611</td>
+      <td style="text-align: center">XGB Stacked kflod Logistic Regression</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_calibrated_logistic</code></td>
+      <td>Nan</td>
+      <td>6.613</td>
+      <td style="text-align: center">Calibrated XGB with logistic regression</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_stack_all_cat_num_xgb</code></td>
+      <td>6.026</td>
+      <td>6.643</td>
+      <td style="text-align: center">Stack all the above row 1,2 and 3 optuna with xgb</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_num_cat_all_avg</code></td>
+      <td>Nan</td>
+      <td>6.690</td>
+      <td style="text-align: center">Simple average of all the xgb of row 1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_cat_feat</code></td>
+      <td>6.248</td>
+      <td>6.927</td>
+      <td style="text-align: center">Hyper parameter turing with optuna while using only Categorical Features</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_float_all_feat</code></td>
+      <td>5.79</td>
+      <td>7.254</td>
+      <td style="text-align: center">Converted all the categorical values to probablites</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_num_feat</code></td>
+      <td>6.245</td>
+      <td>7.401</td>
+      <td style="text-align: center">Hyper parameter turing with optuna while using only Numerical Features</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">xgb_stack_all_cat_num</code></td>
+      <td>7.685</td>
+      <td>9.910</td>
+      <td style="text-align: center">Stack all the above row 1,2 and 3 optuna with logistice regression model</td>
+    </tr>
+  </tbody>
+</table>
+
+          </article>
+
+        </div>
 
     </div>
 

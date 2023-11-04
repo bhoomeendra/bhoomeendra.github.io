@@ -10,10 +10,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Summarization | Bhoomeendra Singh Sisodiya</title>
+    <title>Microsoft Malware Detection | Bhoomeendra Singh Sisodiya</title>
     <meta name="author" content="Bhoomeendra Singh Sisodiya">
-    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-">
+    <meta name="description" content="a project that redirects to another website">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
 
 
@@ -34,7 +33,7 @@
     <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="https://bhooomeendra.github.io/blog/tag/summarization/">
+    <link rel="canonical" href="https://bhooomeendra.github.io/projects/3_project/">
     
     <!-- Dark Mode -->
     
@@ -73,8 +72,8 @@
               </li>
               
               <!-- Blog -->
-              <li class="nav-item active">
-                <a class="nav-link" href="/blog/">Blog<span class="sr-only">(current)</span></a>
+              <li class="nav-item ">
+                <a class="nav-link" href="/blog/">Blog</a>
               </li>
 
               <!-- Other pages -->
@@ -114,36 +113,64 @@
 
     <!-- Content -->
     <div class="container mt-5">
-      <div class="post">
+      <!-- page.html -->
+        <div class="post">
 
-  <header class="post-header">
-    <h1 class="post-title"> <i class="fas fa-hashtag fa-sm"></i> Summarization </h1>
-    <p class="post-description"> an archive of posts with this tag </p>
-  </header>
+          <header class="post-header">
+            <h1 class="post-title">Microsoft Malware Detection</h1>
+            <p class="post-description">a project that redirects to another website</p>
+          </header>
 
-  <article>
-    <div class="table-responsive">
-      <table class="table table-sm table-borderless">
-        
-        <tr>
-          <th scope="row">Apr 29, 2023</th>
-          <td>
-              <a class="post-link" href="/blog/2023/LoRa/">(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS</a>
-          </td>
-        </tr>
-      
-        <tr>
-          <th scope="row">Apr 29, 2023</th>
-          <td>
-              <a class="post-link" href="/blog/2023/HipoRank/">Discourse-Aware Unsupervised Summarization of Long Scientific Documents (Hiporank)</a>
-          </td>
-        </tr>
-      
-      </table>
-    </div>
-  </article>
+          <article>
+            <p>The project is about classifing malware we are provided with a dataset of contaning 9 classes of malaware. The dataset is provided by Microsoft and is available on <a href="https://www.kaggle.com/c/malware-classification/data" rel="external nofollow noopener" target="_blank">Kaggle</a>. The dataset is huge and contains 10,868 files.</p>
 
-</div>
+<h2 id="dataset">Dataset</h2>
+
+<p>For each malware we are provided with a file containing the assembly code and a file containing the byte code. The dataset is divided into 9 classes. The classes are as follows:</p>
+<ol>
+  <li>Ramnit</li>
+  <li>Lollipop</li>
+  <li>Kelihos_ver3</li>
+  <li>Vundo</li>
+  <li>Simda</li>
+  <li>Tracur</li>
+  <li>Kelihos_ver1</li>
+  <li>Obfuscator.ACY</li>
+  <li>Gatak</li>
+</ol>
+
+<p>The challenging part of the problem is to extract features out of the dataset.</p>
+
+<h2 id="data-exploration">Data Exploration</h2>
+
+<ol>
+  <li>Data is imbalanced as the no. of samples in each class are significantly different.<img src="/assets/img/distribution.png" width="400" height="300">
+</li>
+  <li>Distribution of the size of the files in the dataset.</li>
+</ol>
+
+<h2 id="data-preprocessing">Data Preprocessing</h2>
+
+<ol>
+  <li>
+    <p>The data is in the form of assembly code and byte code. We need to extract features out of it. For that we used bag of words approach. We extracted uni-grams, bi-grams from the binary files and assembly files. We also extracted the frequency of the uni-grams and bi-grams.</p>
+  </li>
+  <li>
+    <p>Image features: We also extracted image features from the binary files so each binary number in the file is represented as a pixel in the image. We extracted first 800 pixels of the images formed from the binary files. This is has been shown to work in one of the best solutions to the problem.</p>
+  </li>
+  <li>
+    <p>We also extracted the size of the files as a feature.</p>
+  </li>
+</ol>
+
+<h2 id="model">Model</h2>
+
+<p>For the model part we used xgboost classifier and trained it on the features extracted from the dataset. We achieved an log loss of 0.0203 on the test split of the dataset.</p>
+
+
+          </article>
+
+        </div>
 
     </div>
 
