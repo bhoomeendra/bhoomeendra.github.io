@@ -5,5 +5,5 @@ description: Lecture notes for Reinforcement Learning course by David Silver and
 img: assets/img/rl.png
 importance: 1
 category: Work
-redirect: /RL
+redirect: /RL-Notes
 ---
