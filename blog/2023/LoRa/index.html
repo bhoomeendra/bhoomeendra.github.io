@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS | Bhoomeendra Singh Sisodiya</title>
+    <title>(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS and Quntazied LoRA | Bhoomeendra Singh Sisodiya</title>
     <meta name="author" content="Bhoomeendra Singh Sisodiya">
     <meta name="description" content="Paper Summary">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
@@ -118,7 +118,7 @@
 <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS</h1>
+    <h1 class="post-title">(LORA) LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS and Quntazied LoRA</h1>
     <p class="post-meta">April 29, 2023</p>
     <p class="post-tags">
       <a href="/blog/2023"> <i class="fas fa-calendar fa-sm"></i> 2023 </a>
@@ -141,7 +141,9 @@
   </header>
 
   <article class="post-content">
-    <h2 id="papers-objective">Paper’s Objective</h2>
+    <h1 id="lora">LoRA</h1>
+
+<h2 id="papers-objective">Paper’s Objective</h2>
 <p>LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks. Despite having fewer trainable parameters, a higher training throughput, and, unlike adapters, no additional inference latency.</p>
 
 <h2 id="central-idea">Central Idea</h2>
@@ -155,6 +157,19 @@
 <p>Matrix A is initialized with gaussian random values and matrix B is initialized with the zeros so intially \(\Delta W\) is zero and the model is the same as the pre-trained model. We then scale \(\Delta W x\) by where \(\alpha\) is a constant in \(r\). When optimizing with Adam, tuning \(\alpha\) is roughly the same as tuning the learning rate if we scale the initialization appropriately. As a result, we simply set \(\alpha\) to the first \(r\)  we try and do not tune it.</p>
 
 <p>When deployed in production, we can explicitly compute and store \(W = W_0 + BA\) and perform inference as usual. Note that both \(W_0\) and \(BA\) are in \mathbb{R}^{d \times k}. When we need to switch to another downstream task, we can recover \(W_0\) by subtracting \(BA\) and then adding a different \(B_0A_0\) , a quick operation with very little memory overhead.</p>
+
+<h1 id="qlora">QLoRA</h1>
+
+<p>It is similar to lora but the idea here is that instead of using the full model we will be using the quantized version of the model and train the lora weights. This not as straing forward as it looks there are a few nueonces to the method which I have listed down below. The idea of the QLoRA is trade-off time for memory.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. First we qunatize the model into 4-bit(Normal Float) store it.
+2. We use LoRA 32 bit parameters that we will train and inject them in model 
+3. We dequnatize the model weights (trade off ) to computation data type(16 bit Brainfloat bfloat) to perform the forward and backward pass but only calculate gradient for the LoRA weights.
+</code></pre></div></div>
+
+<p>LoRA weight helps model in redusing qutizatin errors so if 0.5678 become 0.6 then the error is 0.0322 as our LoRA weights are in 32 bit they have to add -0.0322 to the weight.</p>
+
+<p>All the calculation are done in 32-bit while LoRA weigts are trainded.</p>
 
   </article>
 </div>
