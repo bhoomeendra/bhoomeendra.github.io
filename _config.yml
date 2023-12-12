@@ -173,7 +173,9 @@ collections:
   projects:
     output: true
     permalink: /projects/:path/
-
+  notes:
+    output: true
+    permalink: /notes/:path/
 news:
   enabled: true
   scrollable: true # adds a vertical scroll bar if there are more than 3 news items
